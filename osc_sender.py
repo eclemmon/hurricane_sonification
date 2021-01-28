@@ -6,11 +6,21 @@ import csv
 
 
 def open_and_read_json(filename):
+    """
+    Just a json opener. Not in use for this program.
+    :param filename: json file
+    :return: returns the json file.
+    """
     with open(filename) as data_file:
         return json.load(data_file)
 
 
 def json_osc_sender(data):
+    """
+    Sends data from the json file over local network (to SC) with OSC.
+    :param data: loaded json file.
+    :return: None
+    """
     for key in data:
         msg = osc_message_builder.OscMessageBuilder(address='/s_new')
         msg.add_arg('rate', arg_type='s')
@@ -22,6 +32,12 @@ def json_osc_sender(data):
 
 
 def csv_reader(file_name, client):
+    """
+    Takes in a comma delineated csv file and sends its data via OSC over local network.
+    :param file_name: csv file path
+    :param client: OSC Client
+    :return: None
+    """
     with open(file_name) as csv_file:
         the_csv = csv.reader(csv_file, delimiter=',')
         for row in the_csv:
