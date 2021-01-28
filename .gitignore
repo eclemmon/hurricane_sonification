@@ -7,3 +7,4 @@ supercollider_files/hurricane_noises.scd
 include/
 .DS_Store
 lib/python3.8/site-packages/
+.idea/
