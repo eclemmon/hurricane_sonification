@@ -4,6 +4,7 @@ from pythonosc import osc_message_builder
 import time
 import csv
 
+
 def open_and_read_json(filename):
     with open(filename) as data_file:
         return json.load(data_file)
@@ -18,6 +19,7 @@ def json_osc_sender(data):
         msg = msg.build()
         client.send(msg)
         time.sleep(0.75)
+
 
 def csv_reader(file_name, client):
     with open(file_name) as csv_file:
@@ -43,6 +45,7 @@ def csv_reader(file_name, client):
             msg = msg.build()
             client.send(msg)
             time.sleep(0.1)
+
 
 if __name__ == '__main__':
     # FILE_NAME = "average_pressure.json"
