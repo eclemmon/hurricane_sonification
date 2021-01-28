@@ -1,0 +1,9 @@
+bin/
+lib/
+work_samples/
+supercollider_files/hurricane_pressure_noise.scd
+supercollider_files/noise.scd
+supercollider_files/hurricane_noises.scd
+include/
+.DS_Store
+lib/python3.8/site-packages/
