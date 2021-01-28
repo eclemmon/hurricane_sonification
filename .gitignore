@@ -8,3 +8,6 @@ include/
 .DS_Store
 lib/python3.8/site-packages/
 .idea/
+pyvenv.cfg
+open_function.py
+average_pressure.json
