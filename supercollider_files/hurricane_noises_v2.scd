@@ -132,7 +132,18 @@ OSCFunc({ |args|
 	} {
 		~h3.set(\pressure, h3_p, \speed, h3_s, \amp, 1);
 	};
-
 }, '/s_new');
 );
+
+OSCFunc({ |args|
+	// Turns recording on and off...via OSC from python.
+	"OSCFUNC received the following values:".postln;
+	args[1..].postln;
+
+	if (args[1] == 1) {
+		s.record;
+	} {
+		s.stopRecording;
+	};
+}, '/record');
 )

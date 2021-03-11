@@ -38,6 +38,10 @@ def csv_reader(file_name, client):
     :param client: OSC Client
     :return: None
     """
+    record_msg = osc_message_builder.OscMessageBuilder(address='/record')
+    record_msg.add_arg(1, arg_type='i')
+    record_msg = record_msg.build()
+    client.send(record_msg)
     with open(file_name) as csv_file:
         the_csv = csv.reader(csv_file, delimiter=',')
         for row in the_csv:
@@ -61,6 +65,11 @@ def csv_reader(file_name, client):
             msg = msg.build()
             client.send(msg)
             time.sleep(0.1)
+    time.sleep(1)
+    record_msg = osc_message_builder.OscMessageBuilder(address='/record')
+    record_msg.add_arg(0, arg_type='i')
+    record_msg = record_msg.build()
+    client.send(record_msg)
 
 
 if __name__ == '__main__':
@@ -69,6 +78,6 @@ if __name__ == '__main__':
     # print(min(timepoint_and_pressure.values()))
     # print(max(timepoint_and_pressure.values()))
     client = udp_client.SimpleUDPClient("127.0.0.1", 57120)
-    # file_name = '/Users/ericlemmon/Downloads/Hurricanes_19days_data.csv'
-    file_name = 'PATH'
+    file_name = 'Hurricanes_19days_data.csv'
+    # file_name = 'PATH'
     csv_reader(file_name, client=client)
