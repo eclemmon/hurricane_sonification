@@ -31,17 +31,21 @@ def json_osc_sender(data):
         time.sleep(0.75)
 
 
-def csv_reader(file_name, client):
+def csv_reader(file_name, client, record=True):
     """
     Takes in a comma delineated csv file and sends its data via OSC over local network.
+    :param record: True records the sonification, false is for testing so you don't fill up
+    your computer with sonification recordings that are useless.
     :param file_name: csv file path
     :param client: OSC Client
     :return: None
     """
-    record_msg = osc_message_builder.OscMessageBuilder(address='/record')
-    record_msg.add_arg(1, arg_type='i')
-    record_msg = record_msg.build()
-    client.send(record_msg)
+    if record is True:
+        record_msg = osc_message_builder.OscMessageBuilder(address='/record')
+        record_msg.add_arg(1, arg_type='i')
+        record_msg = record_msg.build()
+        client.send(record_msg)
+
     with open(file_name) as csv_file:
         the_csv = csv.reader(csv_file, delimiter=',')
         for row in the_csv:
@@ -65,11 +69,12 @@ def csv_reader(file_name, client):
             msg = msg.build()
             client.send(msg)
             time.sleep(0.1)
-    time.sleep(1)
-    record_msg = osc_message_builder.OscMessageBuilder(address='/record')
-    record_msg.add_arg(0, arg_type='i')
-    record_msg = record_msg.build()
-    client.send(record_msg)
+    if record is True:
+        time.sleep(1)
+        record_msg = osc_message_builder.OscMessageBuilder(address='/record')
+        record_msg.add_arg(0, arg_type='i')
+        record_msg = record_msg.build()
+        client.send(record_msg)
 
 
 if __name__ == '__main__':
