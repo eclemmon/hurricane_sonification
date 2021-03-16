@@ -25,12 +25,37 @@ def json_osc_sender(data):
         msg = osc_message_builder.OscMessageBuilder(address='/s_new')
         msg.add_arg('rate', arg_type='s')
         print(key, data[key])
-        msg.add_arg(((data[key]-188)*500), 'f')
+        msg.add_arg(((data[key] - 188) * 500), 'f')
         msg = msg.build()
         client.send(msg)
         time.sleep(0.75)
 
 
+def record_wrapper(function):
+    """
+    Decorator that will add record OSC messages to any file-type reader function built in the future
+    :param function: Function to be called.
+    :return: Returns the wrapped function
+    """
+
+    def inner1(*args, **kwargs):
+        record_msg = osc_message_builder.OscMessageBuilder(address='/record')
+        record_msg.add_arg(1, arg_type='i')
+        record_msg = record_msg.build()
+        client.send(record_msg)
+
+        function(*args, **kwargs)
+
+        time.sleep(1)
+        record_msg = osc_message_builder.OscMessageBuilder(address='/record')
+        record_msg.add_arg(0, arg_type='i')
+        record_msg = record_msg.build()
+        client.send(record_msg)
+
+    return inner1
+
+
+@record_wrapper
 def csv_reader(file_name, client, record=True):
     """
     Takes in a comma delineated csv file and sends its data via OSC over local network.
@@ -40,12 +65,6 @@ def csv_reader(file_name, client, record=True):
     :param client: OSC Client
     :return: None
     """
-    if record is True:
-        record_msg = osc_message_builder.OscMessageBuilder(address='/record')
-        record_msg.add_arg(1, arg_type='i')
-        record_msg = record_msg.build()
-        client.send(record_msg)
-
     with open(file_name) as csv_file:
         the_csv = csv.reader(csv_file, delimiter=',')
         for row in the_csv:
@@ -69,12 +88,6 @@ def csv_reader(file_name, client, record=True):
             msg = msg.build()
             client.send(msg)
             time.sleep(0.1)
-    if record is True:
-        time.sleep(1)
-        record_msg = osc_message_builder.OscMessageBuilder(address='/record')
-        record_msg.add_arg(0, arg_type='i')
-        record_msg = record_msg.build()
-        client.send(record_msg)
 
 
 if __name__ == '__main__':
